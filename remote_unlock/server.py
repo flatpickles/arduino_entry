@@ -8,18 +8,18 @@ locked_state = True # locked by default
 app = Flask(__name__)
 
 def parse_request(txt, sender):
-  if txt.lower().contains("unlock"):
+  if "unlock" in txt.lower():
     locked_state = False
     return "Lock will unlock."
-  elif txt.lower().contains("add") or txt.lower().contains("remove"):
+  elif "add" in txt.lower() or "remove" in txt.lower():
     to_mod = txt.split()[1]
     if sender != authorized_users[0]:
       return "Only first authorized user can add or remove other users." # basic security
-    if to_mod.contains("+1") and len(to_mod) == 11: # should be more robust
-      if txt.lower().contains("add"):
+    if "+1" in to_mod and len(to_mod) == 11: # should be more robust
+      if "add" in txt.lower():
         authorized_users.append(to_mod)
         return "User " + to_mod + " added to authorized users."
-      elif txt.lower().contains("remove") and to_mod != authorized_users[0]: # don't wreak havoc
+      elif "remove" in txt.lower() and to_mod != authorized_users[0]: # don't wreak havoc
         authorized_users.remove(to_mod)
         return "User " + to_mod + " removed from authorized users."
     else:
