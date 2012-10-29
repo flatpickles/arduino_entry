@@ -43,6 +43,7 @@ def handle_sms():
 
 @app.route("/state", methods=['GET', 'POST'])
 def handle_state_check():
+  global locked_state
   temp_state = locked_state
   locked_state = False # lock after checking
   return "Unlocked" if temp_state else "Locked"
