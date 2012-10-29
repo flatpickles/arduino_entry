@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 def parse_request(txt, sender):
   if "unlock" in txt.lower():
+    global locked_state
     locked_state = False
     return "Lock will unlock."
   elif "add" in txt.lower() or "remove" in txt.lower():
