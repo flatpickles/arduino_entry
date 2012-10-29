@@ -30,6 +30,8 @@ def parse_request(txt, sender):
 
 @app.route("/", methods=['GET', 'POST'])
 def handle_sms():
+    global authorized_users
+
     txt = request.values.get('Body', None)
     sender = request.values.get('From', None)
 
