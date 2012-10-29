@@ -7,8 +7,10 @@ locked_state = True # locked by default
 app = Flask(__name__)
 
 def parse_request(txt, sender):
+  global authorized_users
+  global locked_state
+
   if "unlock" in txt.lower():
-    global locked_state
     locked_state = False
     return "Lock will unlock."
   elif "add" in txt.lower() or "remove" in txt.lower():
@@ -44,6 +46,7 @@ def handle_sms():
 @app.route("/state", methods=['GET', 'POST'])
 def handle_state_check():
   global locked_state
+
   is_locked = locked_state
   locked_state = True # lock after checking
   return "Unlocked" if not is_locked else "Locked"
