@@ -17,7 +17,7 @@ def parse_request(txt, sender):
     to_mod = txt.split()[1]
     if sender != authorized_users[0]:
       return "Only first authorized user can add or remove other users." # basic security
-    if "+1" in to_mod and len(to_mod) == 11: # should be more robust
+    if "+1" in to_mod and len(to_mod) == 12: # should be more robust
       if "add" in txt.lower():
         authorized_users.append(to_mod)
         return "User " + to_mod + " added to authorized users."
@@ -25,7 +25,7 @@ def parse_request(txt, sender):
         authorized_users.remove(to_mod)
         return "User " + to_mod + " removed from authorized users."
     else:
-      return to_add + " not recognized as a valid number."
+      return to_mod + " not recognized (valid example: +12065551234)."
   return "Unrecognized command!"
 
 @app.route("/", methods=['GET', 'POST'])
@@ -52,4 +52,4 @@ def handle_state_check():
   return "Unlocked" if not is_locked else "Locked"
 
 if __name__ == "__main__":
-  app.run(host="0.0.0.0", port=6288)
+  app.run(host="0.0.0.0", port=6288, debug=True)
