@@ -1,8 +1,7 @@
 from flask import Flask, request, redirect
 import twilio.twiml
 
-authorized_users = ["+12064273590"]
-
+authorized_users = ["+12064273590"] # matt's # as first auth user
 locked_state = True # locked by default
 
 app = Flask(__name__)
@@ -45,10 +44,9 @@ def handle_sms():
 @app.route("/state", methods=['GET', 'POST'])
 def handle_state_check():
   global locked_state
-  temp_state = locked_state
-  locked_state = False # lock after checking
-  return "Unlocked" if temp_state else "Locked"
+  is_locked = locked_state
+  locked_state = True # lock after checking
+  return "Unlocked" if not is_locked else "Locked"
 
 if __name__ == "__main__":
-  app.debug = True
   app.run(host="0.0.0.0", port=6288)
