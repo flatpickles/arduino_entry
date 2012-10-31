@@ -22,7 +22,7 @@ long closed_at = 0; // when last closed
 long close_delay = 2000; // wait 2 seconds after closing
 
 // knock detection vars
-double to_match[4] = {1, 2, 1, 1};
+double to_match[4] = {1, 1, 1, 1};
 double input[4];
 int counter;
 double x;
@@ -65,7 +65,7 @@ void loop () {
 
   if (!open_state && closed_at + close_delay < millis() && // make sure it's not open or recently closed
       val >= knock_threshold && last + debounce_delay < millis()) { // if value is beyond threshold and we're outside debounce
-    Serial.println("whoooop");
+    Serial.println("knock");
     digitalWrite(led_pin, HIGH);
     last = millis();
 
