@@ -96,10 +96,7 @@ void loop () {
 
     if(comp == 1)
     {
-      s1.write(0);
-      delay(1000);
-      s1.write(180);
-      delay(2000);
+      open_door();
     }
 
     temp = -1;
