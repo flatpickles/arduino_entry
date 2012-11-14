@@ -8,6 +8,8 @@ int piezo_pin = 0;
 int led_pin = 13;
 int servo_pin = 12;
 int knock_threshold = 3;
+int led_pin_2 = 11;
+int button_pin = 2;
 long debounce_delay = 100;
 long last;
 
@@ -27,18 +29,32 @@ double input[4];
 int curr_knock;
 long pattern_last;
 
+boolean recording = false;
+long last_record;
+
 // configure the device and servo
 void setup() {
   Serial.begin(9600);
   pinMode(led_pin, OUTPUT);
   s1.attach(servo_pin);
   s1.write(closed_val);
+  pinMode(led_pin_2, OUTPUT);
+  pinMode(button_pin, INPUT); 
 }
-
 // loop to poll for knocks and handle related activity
 void loop () {
+  
+  if(digitalRead(button_pin) == HIGH) {
+    recording = true;
+    last_record = millis();
+    digitalWrite(led_pin_2, HIGH);
+  }
+   
+  
   // get current piezo value
   byte val = analogRead(piezo_pin);
+  //if (val > 0)
+  //Serial.println(val);
 
   // check for timeout within lock detection
   int cur_time = millis() - pattern_last;
@@ -53,22 +69,31 @@ void loop () {
     Serial.println("knock");
     // power LED
     digitalWrite(led_pin, HIGH);
-    // register in pattern detection
-    if (pattern_last) {
-      int diff = millis(); - pattern_last;
+    // register in pattern detectionin
+    if (pattern_last >= 0) {
+      int diff = millis() - pattern_last;
+            Serial.println(diff);
       input[curr_knock] = diff;
       curr_knock++;
     }
     // set debounce and pattern timing values
     last = millis();
     pattern_last = millis();
+    // if recording
+    last_record = millis();
+  }
+  
+  // record timeout
+  if (millis() - last_record > TIMEOUT) {
+    digitalWrite(led_pin_2, LOW);
+    recording = false;
   }
 
   // handle completed pattern
   if (curr_knock == 4) {
     // get ratios
     ratio_input_array(input, 4);
-    // handle match
+    // handle matchkno
     if (compare_array(to_match, input, 4)) open_door();
     // update to blank slate
     pattern_last = -1;
@@ -116,6 +141,7 @@ bool compare_array(double match_array[], double input_array[], int length) {
   for (int i = 0; i < length; i++) {
     double lower = match_array[i] - THRESHOLD;
     double higher = match_array[i] + THRESHOLD;
+    Serial.println(input_array[i]);
     if (input_array[i] > higher || input_array[i] < lower) {
         return false;
     }
@@ -138,3 +164,7 @@ void close_door() {
   closed_at = millis();
   s1.write(closed_val);
 }
+
+/**** Set up recording ****/
+
+
