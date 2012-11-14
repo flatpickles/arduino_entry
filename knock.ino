@@ -27,7 +27,7 @@ long close_delay = 2000; // wait 2 seconds after closing
 double to_match[4] = {1, 1, 1, 1};
 double input[4];
 int curr_knock;
-long pattern_last;
+long pattern_last = -1;
 
 boolean recording = false;
 long last_record;
@@ -62,6 +62,11 @@ void loop () {
     curr_knock = 0;
     pattern_last = -1;
   }
+ // record timeout
+  if (millis() - last_record > TIMEOUT) {
+    digitalWrite(led_pin_2, LOW);
+    recording = false;
+  }
 
   // handle a detected knock
   if (!open_state && closed_at + close_delay < millis() && // if it's not open or recently closed
@@ -73,7 +78,11 @@ void loop () {
     if (pattern_last >= 0) {
       int diff = millis() - pattern_last;
             Serial.println(diff);
-      input[curr_knock] = diff;
+      if (recording == false)
+        input[curr_knock] = diff;
+      if (recording == true)
+        to_match[curr_knock] = diff;
+        
       curr_knock++;
     }
     // set debounce and pattern timing values
@@ -83,18 +92,23 @@ void loop () {
     last_record = millis();
   }
   
-  // record timeout
-  if (millis() - last_record > TIMEOUT) {
-    digitalWrite(led_pin_2, LOW);
-    recording = false;
-  }
+ 
 
   // handle completed pattern
   if (curr_knock == 4) {
     // get ratios
-    ratio_input_array(input, 4);
+    if (recording == false)
+      {
+        ratio_input_array(input, 4);    
+        if (compare_array(to_match, input, 4)) open_door();
+      }
+    else
+      {
+        ratio_input_array(to_match, 4);
+        recording = false;
+        digitalWrite(led_pin_2, LOW);
+      }
     // handle matchkno
-    if (compare_array(to_match, input, 4)) open_door();
     // update to blank slate
     pattern_last = -1;
     curr_knock = 0;
@@ -133,6 +147,9 @@ void ratio_input_array(double array[], int length) {
   for (i = 0; i < length; i++) {
     array[i] = array[i] / array_min;
   }
+  for (i = 0; i < length; i++) {
+  Serial.println(array[i]);  
+  }
 }
 
 // compare timing values in two arrays, within error range
@@ -141,7 +158,6 @@ bool compare_array(double match_array[], double input_array[], int length) {
   for (int i = 0; i < length; i++) {
     double lower = match_array[i] - THRESHOLD;
     double higher = match_array[i] + THRESHOLD;
-    Serial.println(input_array[i]);
     if (input_array[i] > higher || input_array[i] < lower) {
         return false;
     }
