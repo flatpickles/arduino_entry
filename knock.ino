@@ -39,22 +39,19 @@ void setup() {
   s1.attach(servo_pin);
   s1.write(closed_val);
   pinMode(led_pin_2, OUTPUT);
-  pinMode(button_pin, INPUT); 
+  pinMode(button_pin, INPUT);
 }
 // loop to poll for knocks and handle related activity
 void loop () {
-  
-  if(digitalRead(button_pin) == HIGH) {
+
+  if (digitalRead(button_pin) == HIGH) {
     recording = true;
     last_record = millis();
     digitalWrite(led_pin_2, HIGH);
   }
-   
-  
+
   // get current piezo value
   byte val = analogRead(piezo_pin);
-  //if (val > 0)
-  //Serial.println(val);
 
   // check for timeout within lock detection
   int cur_time = millis() - pattern_last;
@@ -62,7 +59,8 @@ void loop () {
     curr_knock = 0;
     pattern_last = -1;
   }
- // record timeout
+
+  // record timeout
   if (millis() - last_record > TIMEOUT) {
     digitalWrite(led_pin_2, LOW);
     recording = false;
@@ -74,7 +72,7 @@ void loop () {
     Serial.println("knock");
     // power LED
     digitalWrite(led_pin, HIGH);
-    // register in pattern detectionin
+    // register in pattern detection
     if (pattern_last >= 0) {
       int diff = millis() - pattern_last;
             Serial.println(diff);
@@ -82,7 +80,7 @@ void loop () {
         input[curr_knock] = diff;
       if (recording == true)
         to_match[curr_knock] = diff;
-        
+
       curr_knock++;
     }
     // set debounce and pattern timing values
@@ -91,24 +89,19 @@ void loop () {
     // if recording
     last_record = millis();
   }
-  
- 
 
   // handle completed pattern
   if (curr_knock == 4) {
     // get ratios
-    if (recording == false)
-      {
-        ratio_input_array(input, 4);    
-        if (compare_array(to_match, input, 4)) open_door();
-      }
-    else
-      {
-        ratio_input_array(to_match, 4);
-        recording = false;
-        digitalWrite(led_pin_2, LOW);
-      }
-    // handle matchkno
+    if (recording == false) {
+      ratio_input_array(input, 4);
+      if (compare_array(to_match, input, 4)) open_door();
+    } else {
+      ratio_input_array(to_match, 4);
+      recording = false;
+      digitalWrite(led_pin_2, LOW);
+    }
+
     // update to blank slate
     pattern_last = -1;
     curr_knock = 0;
@@ -148,7 +141,7 @@ void ratio_input_array(double array[], int length) {
     array[i] = array[i] / array_min;
   }
   for (i = 0; i < length; i++) {
-  Serial.println(array[i]);  
+  Serial.println(array[i]);
   }
 }
 
