@@ -26,10 +26,12 @@ long replay_offset = 0;
 
 // pattern detection vars
 double to_match[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+double temp[9];
 double input[9];
 unsigned int curr_knock;
 long pattern_last = -1;
 int total_knocks = 9;
+int old_total_knocks = 9;
 
 boolean recording = false;
 long last_record;
@@ -68,13 +70,24 @@ void loop () {
     digitalWrite(led_pin_2, LOW);
   }
 
-  // recording end
+  // finished recording
   if (recording && (millis() - last_record > TIMEOUT || total_knocks == 9)) {
-    digitalWrite(led_pin_2, LOW);
-    ratio_input_array(to_match, total_knocks);
+    if(total_knocks > 1)
+    {
+      for(int x = 0; x < total_knocks; x++)
+      {
+        to_match[x] = temp[x];
+      }
+    
+      ratio_input_array(to_match, total_knocks);
+      old_total_knocks = total_knocks;
+    }
+    else
+      total_knocks = old_total_knocks;
+    
     recording = false;
     curr_knock = 0;
-    
+      
     // wait and turn off the recording light & last knock light
     delay(debounce_delay * 3);
     digitalWrite(led_pin_2, LOW);
@@ -84,24 +97,24 @@ void loop () {
     display_pattern(to_match, total_knocks);
     // debounce
     last = millis();
+    
+    pattern_last = -1;
   }
 
   // handle a detected knock
   if (!open_state && closed_at + close_delay < millis() && // if it's not open or recently closed
       val >= knock_threshold && last + debounce_delay < millis()) { // and if value is beyond threshold and we're outside debounce
-    Serial.println("knock");
     // power LED
     digitalWrite(led_pin, HIGH);
     // register in pattern detection
     
     if (pattern_last >= 0) {
       int diff = millis() - pattern_last;
-            Serial.println(diff);
       if (recording == false)
         input[curr_knock] = diff;
       if (recording == true)
       {
-        to_match[curr_knock] = diff;
+        temp[curr_knock] = diff;
         total_knocks++;
       }
       
@@ -159,9 +172,6 @@ void ratio_input_array(double array[], int length) {
   int i = 0;
   for (i = 0; i < length; i++) {
     array[i] = array[i] / array_min;
-  }
-  for (i = 0; i < length; i++) {
-  Serial.println(array[i]);
   }
 }
 
