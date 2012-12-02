@@ -57,14 +57,15 @@ void loop () {
   // get current piezo value
   byte val = analogRead(piezo_pin);
 
-  // check for timeout within lock detection
+  // check for timeout within pattern detectioln
   int cur_time = millis() - pattern_last;
-  if (pattern_last != -1 && cur_time > TIMEOUT) {
+  if (!recording && pattern_last != -1 && cur_time > TIMEOUT) {
     
     curr_knock = 0;
     pattern_last = -1;
     digitalWrite(led_pin_2, HIGH);
     delay(500);
+    digitalWrite(led_pin_2, LOW);
   }
 
   // recording end
