@@ -22,6 +22,7 @@ long opened_at = 0; // when last opened
 long open_for = 3000; // open for 5 seconds
 long closed_at = 0; // when last closed
 long close_delay = 2000; // wait 2 seconds after closing
+long replay_offset = 0;
 
 // pattern detection vars
 double to_match[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -72,6 +73,16 @@ void loop () {
     ratio_input_array(to_match, total_knocks);
     recording = false;
     curr_knock = 0;
+    
+    // wait and turn off the recording light & last knock light
+    delay(debounce_delay * 3);
+    digitalWrite(led_pin_2, LOW);
+    digitalWrite(led_pin, LOW);
+    // replay
+    delay(500);
+    display_pattern(to_match, total_knocks);
+    // debounce
+    last = millis();
   }
 
   // handle a detected knock
@@ -182,6 +193,19 @@ void close_door() {
   s1.write(closed_val);
 }
 
-/**** Set up recording ****/
+/**** Recording helpers ****/
+
+void display_pattern(double pattern_array[], int length) {
+  int base_millis = 300;
+  for (int i = 0; i < length; i++) {
+    digitalWrite(led_pin_2, HIGH);
+    delay(base_millis);
+    digitalWrite(led_pin_2, LOW);
+    delay(pattern_array[i] * base_millis);
+  }
+  digitalWrite(led_pin_2, HIGH);
+  delay(base_millis);
+  digitalWrite(led_pin_2, LOW);
+}
 
 
