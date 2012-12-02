@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-#define TIMEOUT 5000
+#define TIMEOUT 4000
 #define THRESHOLD .5
 
 // globals to manage knock sensing
@@ -24,10 +24,11 @@ long closed_at = 0; // when last closed
 long close_delay = 2000; // wait 2 seconds after closing
 
 // pattern detection vars
-double to_match[4] = {1, 1, 1, 1};
-double input[4];
-int curr_knock;
+double to_match[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+double input[9];
+unsigned int curr_knock;
 long pattern_last = -1;
+int total_knocks = 9;
 
 boolean recording = false;
 long last_record;
@@ -46,6 +47,8 @@ void loop () {
 
   if (digitalRead(button_pin) == HIGH) {
     recording = true;
+    total_knocks = 0;
+    curr_knock = 0;
     last_record = millis();
     digitalWrite(led_pin_2, HIGH);
   }
@@ -56,14 +59,19 @@ void loop () {
   // check for timeout within lock detection
   int cur_time = millis() - pattern_last;
   if (pattern_last != -1 && cur_time > TIMEOUT) {
+    
     curr_knock = 0;
     pattern_last = -1;
+    digitalWrite(led_pin_2, HIGH);
+    delay(500);
   }
 
-  // record timeout
-  if (millis() - last_record > TIMEOUT) {
+  // recording end
+  if (recording && (millis() - last_record > TIMEOUT || total_knocks == 9)) {
     digitalWrite(led_pin_2, LOW);
+    ratio_input_array(to_match, total_knocks);
     recording = false;
+    curr_knock = 0;
   }
 
   // handle a detected knock
@@ -73,14 +81,18 @@ void loop () {
     // power LED
     digitalWrite(led_pin, HIGH);
     // register in pattern detection
+    
     if (pattern_last >= 0) {
       int diff = millis() - pattern_last;
             Serial.println(diff);
       if (recording == false)
         input[curr_knock] = diff;
       if (recording == true)
+      {
         to_match[curr_knock] = diff;
-
+        total_knocks++;
+      }
+      
       curr_knock++;
     }
     // set debounce and pattern timing values
@@ -91,21 +103,17 @@ void loop () {
   }
 
   // handle completed pattern
-  if (curr_knock == 4) {
+  if (curr_knock == total_knocks && !recording) {
     // get ratios
-    if (recording == false) {
-      ratio_input_array(input, 4);
-      if (compare_array(to_match, input, 4)) open_door();
-    } else {
-      ratio_input_array(to_match, 4);
-      recording = false;
-      digitalWrite(led_pin_2, LOW);
-    }
+    ratio_input_array(input, total_knocks);
+    if (compare_array(to_match, input, total_knocks)) 
+      open_door();
 
     // update to blank slate
     pattern_last = -1;
     curr_knock = 0;
   }
+  
 
   // if it's been open more than open_for millis, close
   if (open_state && opened_at + open_for < millis()) {
