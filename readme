@@ -1,0 +1,27 @@
+Arduino Entry System
+Fall 2012
+Andy Chen, Max Lesser, Matt Nichols
+
+OVERVIEW
+
+This project is a reasonably straightforward Arduino program which enables pulling the deadbolt from the inside of a door once a specific pattern of knocks has been detected. This pattern is configurable via a "record" function, and, when powered, the device is always listening for the pattern, ready to trigger a motor to pull the deadlock.
+
+DESIGN
+
+This program assumes a hardware configuration that includes a piezo element for knock sensing (connected on "piezo_pin", in our code), two LEDs for control output, a button to trigger the recording mode, and a servo ("s1", connected on "servo_pin") to pull the deadbolt.
+
+The device begins with a default knock pattern of ten equally spaced knocks. In our system, a n knock pattern is represented as a n-1 sized array, each element being the ratio between adjacent knocks (so the default knock pattern is represented as [1, 1, 1, 1, 1, 1, 1, 1, 1]). When the system hears a first knock, it will begin recording the time offsets between subsequent knocks, and after a timeout (i.e. the knock has completed) relative ratios are calculated from the recorded offsets. Each of these ratios are then compared to those of the current key pattern (within an error margin), and if they all match then the servo is triggered and the deadbolt is pulled open.
+
+Recording is very similar: pressing the button triggers record mode, and then the current key pattern will be replaced by whatever ratioed pattern is recorded after the button press (and before a timeout, as above). This pattern will then be played back to the user on a LED, and the device will re-enter normal operation, listening for entry attempts.
+
+USE
+
+Installation: the device must be installed such that the piezo is pressed directly against the door, to best register knocking. The servo should be configured to pull the deadbolt out when it rotates (the user will need to handle re-locking the door).
+
+Recording: press the button once, and then knock out the desired pattern on the inside of the door. Wait for the timeout, and then make sure the replayed pattern (on the second, lower LED) is as you desire. Your patterns must consist of between three and ten knocks (inclusive); shorter knocks will not overwrite the current key pattern, and recording will cut off after ten knocks.
+
+Unlocking: simply knock the pre-recorded pattern on the outside of the door, and if the time ratios between your knocks match the stored key pattern, the servo will pull the deadlock. It must be manually re-locked afterwards. If you make a mistake in the pattern, wait four seconds (the timeout) and try again.
+
+NEXT STEPS
+
+In the remote_unlock/ directory of the repo, we have the backend/server script for implementing SMS-triggered unlocking as well (via Twilio). Alas, we haven't yet had any successes in configuring the device's side of this functionality; however, should the device be configured with an ethernet shield, it would be simple to poll against [server port]/state and trigger the servo when the "Unlocked" state is observed.
