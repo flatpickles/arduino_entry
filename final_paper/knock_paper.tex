@@ -175,6 +175,19 @@ Following is a basic overview for how we imagine an end user approaching the ope
 
 \section{Implementation}
 % Challenges, etc.
+Timeout: We chose a timeout of 4 seconds. From a user standpoint, we decided it was the right amount of time because 4 seconds between knocks is too long for a pattern, and isn't so long that the user would get impatient waiting for it to timeout.
+
+Threshold: We have a threshold of 0.5. This means that the most any interval between knocks can be wrong by is 0.5. For example, if the interval between 2 knocks is 3, a "correct" input is anywhere from 2.5 to 3.5. After multiple trials we discovered that this constant was the perfect error margin for a standard user.
+
+Knock threshold: This threshold sets how loud a knock has to be in order to be registered. We chose 3 because it detects most knocks, and no static.
+
+Keeping door open: The door stays open for 3 seconds, and nothing can happen with the program for 2 seconds after it closes. The door stays open that long because it's the right amount of time to give the user to enter. We had to block the program for 2 seconds after it closes becasue it would mess up the circuit voltages.
+
+Max number of knocks: We limited the user to a maximum number of 10 knocks for their pattern. We chose this number because it allows for creativity and unique knocking patterns. We limited it to 10 because longer knock patterns would result in the user forgetting the pattern.
+
+Debounce-delay: The sensor doesn't detect a knock as a singular event. It will detect a singular knock as many knocks that happen 
+extremely close together. We need a debounce delay to make the program wait to make sure the program doesnt think the vibrations after the knock are more knocks. We chose .1 seconds because you would never try to do two knocks that quickly, and it fixes the problem stated.
+
 
 \section{Evaluation}
 % did it work? Are there any corner cases? How would you solve them?
