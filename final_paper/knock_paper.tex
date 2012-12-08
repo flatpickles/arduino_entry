@@ -76,8 +76,8 @@
 
 \section{Introduction}
  % Introduce your project. Succinctly explain your problem and solution. Why did you choose to work on it?
-
-This project is a reasonably straightforward Arduino program which enables pulling the deadbolt from the inside of a door once a specific pattern of knocks has been detected. This pattern is configurable via a "record" function, and, when powered, the device is always listening for the pattern, ready to trigger a motor to pull the deadlock.
+Carrying keys around has always been a hassle for all of us. If one loses a key, he or she has to be assisted by someone else to get in to the room. A lot of times, there are situations where you wouldn't want to bring your keys with you either, such as when you're going on a run.I personally have forgotten my keys in my room, or have been locked out by my roommate numerous times. We wanted an easier way to enter and exit a locked room, and not ever have to worry about being locked out. 
+Our project is a reasonably straightforward Arduino program which enables pulling a doorhandle down from the inside of a door once a specific pattern of knocks has been detected. This pattern is configurable via a "record" function, and, when powered, the device is always listening for the pattern, ready to trigger a motor to open the door. If an incorrect knock pattern is given, the program alerts you through a buzz in the speaker. This way, the room is secure and you'll never be locked out because you don't have the key.
 
 \section{Architecture}
 % Describe the architecture of your system. Figures are welcomed and encouraged
@@ -99,9 +99,11 @@ Unlocking: simply knock the pre-recorded pattern on the outside of the door, and
 
 \section{Evaluation}
 % did it work? Are there any corner cases? How would you solve them?
+Yes it did work. 
 
 \section{Related Work}
 % Are there any similar solutions? Compare yours to theirs, if possible.
+There aren't many similar affordabe solutions. Doors with fingerprint scanners exist but are extremely expensive, even though they're more secure. "The Clapper" also exists, that gives current to an outlet if it detects claps. However, it doesn't let you customize the sequence of claps. It doesn't directly connect to a motor either. Lastly, it detects sound as a pose to vibrations. Our project won't detect random noises, only vibrations on the door whereas "The Clapper" could interpret white noise and randomly open and close the door.
 
 \section{Future Work}
 % Describe here features that you wanted to implement, but due to time/resource constraints you weren't able to.
