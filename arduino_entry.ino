@@ -56,6 +56,7 @@ void loop () {
     recording = true;
     total_knocks = 0;
     curr_knock = 0;
+    pattern_last = -1;
     last_record = millis();
     digitalWrite(led_pin_2, HIGH);
   }
