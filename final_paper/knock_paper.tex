@@ -149,7 +149,11 @@ Our project is a reasonably straightforward Arduino program which enables pullin
 
 \section{Evaluation}
 % did it work? Are there any corner cases? How would you solve them?
-Yes it did work. 
+We were able to successfully connect the finished product to a door.  The piezo sensor used to detect knocks is fairly cheap, so sometimes knocks are not detected correctly, but it works fairly well.  To get the best results, the components must be placed somewhere in the center of the door so that all vibrations are picked up clearly.  
+
+Recording and playback of patterns works perfectly, and with the addition of a piezo speaker it is easy to tell when you haven't correctly knocked out the pattern, or your knocks have timed out.  One problem with the finished product is that the servo we purchased only is able to turn 180 degrees.  This means that it is only able to pull a doorknob or lock a small distance.  We were able to solve this problem by pre-pulling the knob a small amount, so that the knob only has to be pulled a small amount before the door is opened.
+
+One edge case to deal with is ambient vibrations in the door that the system is connected to.  If it picks up stray vibrations, it could either mess up the patter the user is trying to knock out, or pick up knocks when the user isn't even using the device.  Luckily, the first problem is solved by merely re-knocking the pattern, as the buzzer lets you know when you have made a mistake.  If knocks are being picked up when the user isn't knocking at all, the buzzer will sound after a timeout, but nothing else will happen.
 
 \section{Related Work}
 % Are there any similar solutions? Compare yours to theirs, if possible.
