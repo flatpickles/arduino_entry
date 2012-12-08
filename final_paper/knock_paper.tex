@@ -180,7 +180,7 @@ In this section, we will briefly discuss some specific design choices we made in
 
 \textbf{Timeout}: We chose a timeout of 4 seconds. From a user standpoint, we decided it was the right amount of time because 4 seconds between knocks is too long for a pattern, and isn't so long that the user would get impatient waiting for it to timeout.
 
-\textbf{Threshold}: We have a threshold of 0.5. This means that the most any interval between knocks can be wrong by is 0.5. For example, if the interval between 2 knocks is 3, a "correct" input is anywhere from 2.5 to 3.5. After multiple trials we discovered that this constant was the perfect error margin for a standard user.
+\textbf{Threshold}: We have a threshold of 0.5. This means that the most any interval between knocks can be wrong by is 0.5. For example, if the interval between 2 knocks is 3, a ``correct" input is anywhere from 2.5 to 3.5. After multiple trials we discovered that this constant was the perfect error margin for a standard user.
 
 \textbf{Knock threshold}: This threshold sets how loud a knock has to be in order to be registered. We chose 3 because it detects most knocks, and no static.
 
@@ -198,17 +198,17 @@ We were able to successfully connect the finished product to a door.  The piezo 
 
 Recording and playback of patterns works perfectly, and with the addition of a piezo speaker it is easy to tell when you haven't correctly knocked out the pattern, or your knocks have timed out.  One problem with the finished product is that the servo we purchased only is able to turn 180 degrees.  This means that it is only able to pull a doorknob or lock a small distance.  We were able to solve this problem by pre-pulling the knob a small amount, so that the knob only has to be pulled a small amount before the door is opened.
 
-One edge case to deal with is ambient vibrations in the door that the system is connected to.  If it picks up stray vibrations, it could either mess up the patter the user is trying to knock out, or pick up knocks when the user isn't even using the device.  Luckily, the first problem is solved by merely re-knocking the pattern, as the buzzer lets you know when you have made a mistake.  If knocks are being picked up when the user isn't knocking at all, the buzzer will sound after a timeout, but nothing else will happen.
+One edge case to deal with is ambient vibrations in the door that the system is connected to.  If it picks up stray vibrations, it could either mess up the pattern the user is trying to knock out, or pick up knocks when the user isn't even using the device.  Luckily, the first problem is solved by merely re-knocking the pattern, as the buzzer lets you know when you have made a mistake.  If knocks are being picked up when the user isn't knocking at all, the buzzer will sound after a timeout, but nothing else will happen.
 
 \section{Related Work}
 % Are there any similar solutions? Compare yours to theirs, if possible.
 There aren't many similar affordable solutions. Doors with fingerprint scanners exist but are extremely expensive, even though they're more secure. These go for around \$300.
 
-``The Clapper" also exists, that gives current to an outlet if it detects claps. However, it doesn't let you customize the sequence of claps. It doesn't directly connect to a motor either. Lastly, it detects sound as a pose to vibrations. Our project won't detect random noises, only vibrations on the door whereas ``The Clapper" could interpret white noise and randomly open and close the door. ``The Clapper" goes for around \$20. 
+``The Clapper" also exists, that gives current to an outlet if it detects claps. However, it doesn't let you customize the sequence of claps. It doesn't directly connect to a motor either. Lastly, it detects sound as opposed to vibrations. Our project won't detect random noises, only vibrations on the door whereas ``The Clapper" could interpret white noise and randomly open and close the door. ``The Clapper" goes for around \$20. 
 
 Lockitron is a Kickstarter project that uses smart phones to lock and unlock doors. To use Lockitron, you first need to attach the Lockitron shell around your deadbolt. This shell is smart; it's connected to WiFi and has Bluetooth. From anywhere in the world, you can unlock or lock your door from your smartphone. You can also grant access to other users. Lockitron also automatically unlocks the door when you walk near it with your smartphone. With Lockitron, you would still either need your key or a phone to get into you're locked house. It doesn't entirely address the problem we were having. You can still lock your phone inside the house, and if you don't want to run with keys, why would you run with your phone. We need a solution that doesn't physically require any hardware, and Lockitron doesn't give us that. It also costs around \$200. The device can be pre-ordered at: \url{www.lockitron.com/preorder}
 
-Our project's cost came out to around \$50. If we were to sell this project, our costs would decrease of bulk order so we could sell for around \$70 to turn a fairly significant profit.
+Our project's cost came out to around \$50. If we were to sell this project, our costs would decrease due to ordering parts in bulk, so we could sell for around \$70 and turn a fairly significant profit.
 
 \section{Future Work}
 % Describe here features that you wanted to implement, but due to time/resource constraints you weren't able to.
