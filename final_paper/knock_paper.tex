@@ -1,0 +1,95 @@
+%==============================================================================
+% Matt Nichols' Homework Template
+%==============================================================================
+
+
+%Fill out this line with the homework number
+\newcommand{\visibleusernames}
+{\space man1, malesser, ac110 }
+{}
+\newcommand{\thisclass}{CSCI 160}
+\newcommand{\thishw}{Final Project}
+
+%==============================================================================
+% Formatting parameters
+%==============================================================================
+
+\documentclass[11pt]{article}			% 11pt article
+\author{Matt Nichols}
+\date{\today}
+\makeatletter					% Make '@' accessible.
+
+%Fill out this line with your name and login
+\def\@oddhead{\bf \thisclass \space - \thishw\hfill \visibleusernames} % Here they are
+
+\oddsidemargin=0in				% Left margin minus 1 inch.
+\evensidemargin=0in				% Same for even-numbered pages.
+\textwidth=6.5in				% Text width (8.5in - margins).
+\topmargin=0in					% Top margin minus 1 inch.
+\headsep=0.2in					% Distance from header to body.
+\textheight=8.5in					% Body height (incl. footnotes)
+\skip\footins=4ex				% Space above first footnote.
+\hbadness=10000					% No "underfull hbox" messages.
+\makeatother					% Make '@' special again.
+
+%==============================================================================
+% Packages used
+%==============================================================================
+
+\usepackage{amsmath}				% want AMS fonts
+\usepackage{amssymb}
+%\usepackage{psfig}				% want to include EPS files
+\usepackage[pdftex]{graphicx}				% for including images
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{hyperref}
+
+%==============================================================================
+% Macros
+%==============================================================================
+\newcommand{\new}[1]{{\em #1\/}}		% New term (set in italics).
+\newcommand{\set}[1]{\{#1\}}			% Set (as in \set{1,2,3})
+\newcommand{\setof}[2]{\{\,{#1} $\mid$~{#2}\,\}}	% Set (as in \setof{x}{x > 0})
+\newcommand{\N}{\mathord{\Bbb N}}		% Positive integers.
+\newcommand{\compl}[1]{\overline{#1}}		% Complement of ...            
+\newcommand{\bigand}{\bigwedge}
+\newcommand{\bigor}{\bigvee}
+\newcommand{\OR}{\vee}
+\newcommand{\AND}{\wedge}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\nlogn}{n \log n}
+
+\newcounter{qcounter}
+\setcounter{section}{0}
+\def\thesection{Section \arabic{section}}
+
+
+% \begin{list}{b\alph{qcounter}.}{\usecounter{qcounter}} <-- helpful
+
+%==============================================================================
+% Title
+%==============================================================================
+
+\begin{document}
+\centerline{\bf \LARGE\thishw: Knock Detection Entry System}
+\centerline{\today}
+
+\section{Introduction}
+ % Introduce your project. Succinctly explain your problem and solution. Why did you choose to work on it?
+
+\section{Architecture}
+% Describe the architecture of your system. Figures are welcomed and encouraged
+
+\section{Implementation}
+% Challenges, etc.
+
+\section{Evaluation}
+% did it work? Are there any corner cases? How would you solve them?
+
+\section{Related Work}
+% Are there any similar solutions? Compare yours to theirs, if possible.
+
+\section{Future Work}
+% Describe here features that you wanted to implement, but due to time/resource constraints you weren't able to.
+
+\end{document}
