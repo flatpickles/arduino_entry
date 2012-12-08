@@ -147,25 +147,21 @@ Our project is a reasonably straightforward Arduino program which enables pullin
 \section{Implementation}
 % Challenges, etc.
 
-This program assumes a hardware configuration that includes a piezo element for knock sensing (connected on "piezo\_pin", in our code), two LEDs for control output, a button to trigger the recording mode, and a servo ("s1", connected on "servo\_pin") to pull the deadbolt.
-
-The device begins with a default knock pattern of ten equally spaced knocks. In our system, a n knock pattern is represented as a n-1 sized array, each element being the ratio between adjacent knocks (so the default knock pattern is represented as [1, 1, 1, 1, 1, 1, 1, 1, 1]). When the system hears a first knock, it will begin recording the time offsets between subsequent knocks, and after a timeout (i.e. the knock has completed) relative ratios are calculated from the recorded offsets. Each of these ratios are then compared to those of the current key pattern (within an error margin), and if they all match then the servo is triggered and the deadbolt is pulled open.
-
-Recording is very similar: pressing the button triggers record mode, and then the current key pattern will be replaced by whatever ratioed pattern is recorded after the button press (and before a timeout, as above). This pattern will then be played back to the user on a LED, and the device will re-enter normal operation, listening for entry attempts.
-
-Installation: the device must be installed such that the piezo is pressed directly against the door, to best register knocking. The servo should be configured to pull the deadbolt out when it rotates (the user will need to handle re-locking the door).
-
-Recording: press the button once, and then knock out the desired pattern on the inside of the door. Wait for the timeout, and then make sure the replayed pattern (on the second, lower LED) is as you desire. Your patterns must consist of between three and ten knocks (inclusive); shorter knocks will not overwrite the current key pattern, and recording will cut off after ten knocks.
-
-Unlocking: simply knock the pre-recorded pattern on the outside of the door, and if the time ratios between your knocks match the stored key pattern, the servo will pull the deadlock. It must be manually re-locked afterwards. If you make a mistake in the pattern, wait four seconds (the timeout) and try again.
-
 \section{Evaluation}
 % did it work? Are there any corner cases? How would you solve them?
 Yes it did work. 
 
 \section{Related Work}
 % Are there any similar solutions? Compare yours to theirs, if possible.
-There aren't many similar affordabe solutions. Doors with fingerprint scanners exist but are extremely expensive, even though they're more secure. "The Clapper" also exists, that gives current to an outlet if it detects claps. However, it doesn't let you customize the sequence of claps. It doesn't directly connect to a motor either. Lastly, it detects sound as a pose to vibrations. Our project won't detect random noises, only vibrations on the door whereas "The Clapper" could interpret white noise and randomly open and close the door.
+There aren't many similar affordabe solutions. Doors with fingerprint scanners exist but are extremely expensive, even though they're more secure. These go for around \$300.
+
+"The Clapper" also exists, that gives current to an outlet if it detects claps. However, it doesn't let you customize the sequence of claps. It doesn't directly connect to a motor either. Lastly, it detects sound as a pose to vibrations. Our project won't detect random noises, only vibrations on the door whereas "The Clapper" could interpret white noise and randomly open and close the door. "The Clapper" goes for around \$20. 
+\includegraphics[scale=0.75]{theclapper.jpg}
+
+Lockitron is a kickstart that uses smart phones to lock and unlock doors. To use lockitron, you first need to attach the lockitron shell around your deadbolt. This shell is smart; it's connected to wifi and has bluetooth. From anywhere in the world, you can unlock or lock your door from your smartphone. You can also grant access to other users. Lockitron also automatically unlocks the door when you walk near it with your smartphone. With lockitron, you would still either need your key or a phone to get into you're locked house. It doesn't entirely address the problem we were having. You can still lock your phone inside the house, and if you don't want to run with keys, why would you run with your phone. We need a solution that doesn't physically require any hardware, and lockitron doesn't give us that. It also costs around \$200.
+\url{https://lockitron.com/preorder}
+
+Our project's cost came out to around \$50. If we were to sell this project, our costs would decrease of bulk order so we could sell for around \$70.
 
 \section{Future Work}
 % Describe here features that you wanted to implement, but due to time/resource constraints you weren't able to.
