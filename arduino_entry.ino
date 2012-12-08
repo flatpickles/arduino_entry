@@ -13,6 +13,9 @@ int button_pin = 2;
 long debounce_delay = 100;
 long last;
 
+// speaker
+int speakerOut = 9;
+
 // globals to manage opening and open state
 Servo s1;
 int closed_val = 0;
@@ -44,6 +47,7 @@ void setup() {
   s1.write(closed_val);
   pinMode(led_pin_2, OUTPUT);
   pinMode(button_pin, INPUT);
+  pinMode(speakerOut, OUTPUT);
 }
 // loop to poll for knocks and handle related activity
 void loop () {
@@ -65,9 +69,7 @@ void loop () {
     
     curr_knock = 0;
     pattern_last = -1;
-    digitalWrite(led_pin_2, HIGH);
-    delay(500);
-    digitalWrite(led_pin_2, LOW);
+    error_tone();
   }
 
   // finished recording
@@ -133,6 +135,10 @@ void loop () {
     ratio_input_array(input, total_knocks);
     if (compare_array(to_match, input, total_knocks)) 
       open_door();
+    else
+    {
+      error_tone();
+    }
 
     // update to blank slate
     pattern_last = -1;
@@ -217,6 +223,24 @@ void display_pattern(double pattern_array[], int length) {
   digitalWrite(led_pin_2, HIGH);
   delay(base_millis);
   digitalWrite(led_pin_2, LOW);
+}
+
+
+// plays a tone when the pattern was not recognized or there was a timeout
+void error_tone() {
+  long elapsed_time = 0;
+  long duration = 300;
+  
+    while (elapsed_time < duration) {
+
+      digitalWrite(speakerOut,HIGH);
+      delayMicroseconds(1912 / 2);
+
+      digitalWrite(speakerOut, LOW);
+      delayMicroseconds(1912 / 2);
+
+      elapsed_time += 1;
+  }                                 
 }
 
 
